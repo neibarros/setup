@@ -9,7 +9,7 @@ export async function AppRoutes(app: FastifyInstance) {
     const createHabityBody = z.object({
       title: z.string(),
       weekDays: z.array(z.number().min(0).max(6)),
-    })
+    });
 
     const { title, weekDays } = createHabityBody.parse(request.body);
 
@@ -22,7 +22,7 @@ export async function AppRoutes(app: FastifyInstance) {
         weekDays: {
           create: weekDays.map((weekDay) => ({ weekDay })),
         },
-      }
+      },
     });
   });
 
@@ -44,9 +44,9 @@ export async function AppRoutes(app: FastifyInstance) {
         weekDays: {
           some: {
             weekDay,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     const day = await prisma.day.findUnique({
@@ -54,15 +54,16 @@ export async function AppRoutes(app: FastifyInstance) {
         date: parsedDate.toDate(),
       },
       include: {
-        dayHabits: true
-      }
-    })
+        dayHabits: true,
+      },
+    });
 
-    const completedHabits = day?.dayHabits.map((dayHabit) => dayHabit.habitId);
+    const completedHabits =
+      day?.dayHabits.map((dayHabit) => dayHabit.habitId) ?? [];
 
     return {
       possibleHabits,
-      completedHabits
+      completedHabits,
     };
   });
 
@@ -78,14 +79,14 @@ export async function AppRoutes(app: FastifyInstance) {
     let day = await prisma.day.findUnique({
       where: {
         date: today,
-      }
+      },
     });
 
     if (!day) {
       day = await prisma.day.create({
         data: {
           date: today,
-        }
+        },
       });
     }
 
@@ -94,25 +95,24 @@ export async function AppRoutes(app: FastifyInstance) {
         dayId_habitId: {
           dayId: day.id,
           habitId: id,
-        }
-      }
+        },
+      },
     });
 
     if (dayHabit) {
       await prisma.dayHabit.delete({
         where: {
           id: dayHabit.id,
-        }
+        },
       });
     } else {
       await prisma.dayHabit.create({
         data: {
           dayId: day.id,
           habitId: id,
-        }
+        },
       });
     }
-
   });
 
   app.get("/summary", async (request) => {
@@ -139,6 +139,6 @@ export async function AppRoutes(app: FastifyInstance) {
       FROM days D
     `;
 
-    return summary
+    return summary;
   });
 }
