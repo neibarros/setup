@@ -40,15 +40,15 @@ export function HabitDay({
         "bg-violet-900 border-violet-700":
           amountAcconplishedPercentage > 0 && amountAcconplishedPercentage < 20,
         "bg-violet-800 border-violet-600":
-          amountAcconplishedPercentage > 20 &&
+          amountAcconplishedPercentage >= 20 &&
           amountAcconplishedPercentage < 40,
         "bg-violet-700 border-violet-500":
-          amountAcconplishedPercentage > 40 &&
+          amountAcconplishedPercentage >= 40 &&
           amountAcconplishedPercentage < 60,
         "bg-violet-600 border-violet-500":
-          amountAcconplishedPercentage > 60 &&
+          amountAcconplishedPercentage >= 60 &&
           amountAcconplishedPercentage < 80,
-        "bg-violet-500 border-violet-400": amountAcconplishedPercentage > 80,
+        "bg-violet-500 border-violet-400": amountAcconplishedPercentage >= 80,
         "border-white border-4": isCurrentDay,
       })}
       style={{ width: DAY_SIZE, height: DAY_SIZE }}

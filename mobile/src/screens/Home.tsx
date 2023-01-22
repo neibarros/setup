@@ -1,6 +1,6 @@
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
 
 import { DAY_SIZE, HabitDay } from "../components/HabitDay";
@@ -20,7 +20,7 @@ type Summary = Array<{
   date: string;
   completed: number;
   amount: number;
-}>
+}>;
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,9 +41,11 @@ export function Home() {
     }
   }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   if (isLoading) return <Loading />;
 
@@ -70,7 +72,9 @@ export function Home() {
         {summary.length > 0 && (
           <View className="flex-row flex-wrap">
             {datesFromYearStart.map((date) => {
-              const dayWithHabit = summary.find(day => dayjs(date).isSame(day.date, 'day'));
+              const dayWithHabit = summary.find((day) =>
+                dayjs(date).isSame(day.date, "day")
+              );
 
               return (
                 <HabitDay
@@ -78,9 +82,11 @@ export function Home() {
                   date={date}
                   completed={dayWithHabit?.completed}
                   amount={dayWithHabit?.amount}
-                  onPress={() => navigate("habit", { date: date.toISOString() })}
+                  onPress={() =>
+                    navigate("habit", { date: date.toISOString() })
+                  }
                 />
-              )
+              );
             })}
 
             {amountOfDatesToFill > 0 &&
